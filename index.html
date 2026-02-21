@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>夜刊 YAKAN • 2029.ghost</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <style>
+    /* === CSS Variables === */
     :root {
       --bg: #000000;
       --text: #d0d0d0;
@@ -13,24 +15,31 @@
       --glow: rgba(220,220,220,0.08);
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    /* === Reset === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    /* === Base Styles === */
     body {
       min-height: 100vh;
       background: var(--bg);
       color: var(--text);
       font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      line-height: 1.45;
       overflow-x: hidden;
       position: relative;
-      line-height: 1.45;
-      font-size: 1.1rem;
     }
 
+    /* === Visual Effects === */
     .crt-overlay {
       position: fixed;
       inset: 0;
-      pointer-events: none;
       z-index: 9999;
+      pointer-events: none;
       background: 
         repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.45) 2px, rgba(0,0,0,0.45) 4px),
         radial-gradient(circle at 50% 50%, transparent 40%, #000 85%);
@@ -47,8 +56,12 @@
       animation: noise-move 20s linear infinite;
     }
 
-    @keyframes noise-move { 0% { background-position: 0 0; } 100% { background-position: 200px 200px; } }
+    @keyframes noise-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 200px 200px; }
+    }
 
+    /* === Layout === */
     .container {
       display: flex;
       min-height: 100vh;
@@ -56,51 +69,60 @@
       z-index: 10;
     }
 
-    .left, .right {
+    .left,
+    .right {
       flex: 1;
       padding: 3rem 2rem;
       overflow-y: auto;
     }
 
     .left {
+      max-width: 50%;
       background: rgba(10,10,10,0.92);
       border-right: 1px solid #222;
-      max-width: 55%;
     }
 
     .right {
-      background: rgba(5,5,5,0.95);
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
+      background: rgba(5,5,5,0.95);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding-top: 3rem;
+      padding-bottom: 2rem;
     }
 
-    h1, h2 {
+    /* === Typography === */
+    h1,
+    h2 {
       font-family: 'Orbitron', sans-serif;
+      color: #fff;
       text-transform: uppercase;
       letter-spacing: 0.15em;
-      color: #fff;
       text-shadow: 0 0 8px var(--glow);
       margin-bottom: 1.2rem;
     }
 
     .ascii-art {
       font-family: monospace;
-      white-space: pre;
       font-size: 0.9rem;
       color: #555;
-      margin: 1.5rem 0;
+      white-space: pre;
       line-height: 1.1;
+      margin: 1.5rem 0;
     }
 
+    /* === Components === */
     .section {
       margin-bottom: 3.5rem;
     }
 
     .hr {
-      border: none;
       height: 1px;
+      border: none;
       background: linear-gradient(to right, transparent, #444, transparent);
       margin: 2rem 0;
     }
@@ -108,11 +130,19 @@
     .player-box {
       width: 100%;
       max-width: 540px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       background: #0a0a0a;
       border: 1px solid #222;
       border-radius: 4px;
       overflow: hidden;
       box-shadow: inset 0 0 30px #000, 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .player-box iframe {
+      flex: 1;
+      min-height: 0;
     }
 
     .status {
@@ -123,31 +153,102 @@
       letter-spacing: 0.2em;
     }
 
+    .volume-control {
+      margin-top: 1.5rem;
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+    }
+
+    .volume-control label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 0.1em;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    .volume-control input[type="range"] {
+      width: 100%;
+      height: 4px;
+      background: #222;
+      border: none;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+
+    .volume-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: #888;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .volume-control input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      background: #888;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    .volume-control #vol-value {
+      margin-top: 0.5rem;
+      display: block;
+      font-size: 1rem;
+      color: #666;
+    }
+
+    /* === Responsive === */
     @media (max-width: 900px) {
-      .container { flex-direction: column; }
-      .left, .right { max-width: 100%; border: none; }
-      .left { padding-top: 2rem; }
-      .right { padding: 2rem; }
+      .container {
+        flex-direction: column;
+      }
+
+      .left,
+      .right {
+        max-width: 100%;
+        border: none;
+      }
+
+      .left {
+        padding-top: 2rem;
+      }
+
+      .right {
+        padding: 2rem;
+        position: static;
+        height: auto;
+      }
     }
   </style>
 </head>
 <body>
-
+  <!-- Visual Effects -->
   <div class="crt-overlay"></div>
   <div class="noise"></div>
 
+  <!-- Main Container -->
   <div class="container">
-    <!-- Левая часть: журнал -->
-    <div class="left">
-
-      <div class="ascii-art">
+    <!-- Magazine Content -->
+    <main class="left">
+      <!-- Header -->
+      <header>
+        <div class="ascii-art">
 ╔════════════════════════════════════════════╗
 ║  夜刊 YAKAN vol.零号 - 2029.02.ghost       ║
 ║  «Когда боги умерли, мы купили их домены»  ║
 ╚════════════════════════════════════════════╝
-      </div>
+        </div>
 
-      <div class="ascii-art">
+        <div class="ascii-art">
     ⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀
     ⠀⢀⣠⡶⠞⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠛⠳⣦⣀⠀
    ⣠⡾⠋⠀⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠙⢷⣄
@@ -158,9 +259,9 @@
   ⣷⡀⠀⠀⠈⠻⣦⣀⣀⣀⣀⣀⣤⠞⠋⠀⠀⠀⠀⢀⣾
    ⠙⢷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⠟
       ⠉⠛⠶⣦⣤⣤⣤⣤⣤⣶⠞⠋
-      </div>
+        </div>
 
-      <div class="ascii-art">
+        <nav class="ascii-art">
 ┌───────────────────── INDEX v0.8 ─────────────────────┐
 │ 01 EDITORIAL – Последний кто нажмёт like             │
 │ 02 STREET SAMURAI 2.0 – augmentations tier-list '29  │
@@ -168,68 +269,103 @@
 │ 04 CORPORATE KOAN – дзен от отдела по этике данных   │
 │ 05 ADSpace RENTED – твой мозг уже в аренде           │
 └───────────────────────────────────────────────────────┘
-      </div>
+        </nav>
+      </header>
 
       <div class="hr"></div>
 
-      <div class="section">
+      <!-- Articles -->
+      <article class="section">
         <h2>01 EDITORIAL</h2>
         <p>Мы больше не ждём спасения.<br>Мы ждём апдейт.</p>
         <p>Последний романтик умер в прямом эфире в 2027-м.<br>С тех пор остались только стримеры,<br>которые притворяются, что ещё чувствуют что-то<br>кроме дофаминового зуда и страха пропустить дроп.</p>
         <p>Неокиберпанк — это когда ты понимаешь,<br>что дистопия уже не страшная.<br>Она просто слегка overpriced и с mandatory subscription.</p>
-      </div>
+      </article>
 
-      <div class="section">
+      <article class="section">
         <h2>03 幽霊ガール — midnight playlist</h2>
         <p>1. death's dynamic shroud - CD PLAYER少女<br>2. luxury elite - 空虚な心<br>3. bl00dwave - 深夜のドライブ<br>4. Nmesh - 新しい日の始まり<br>5. George Clanton - Make It Forever<br>6. 2814 - 恢复<br>7. t e l e p a t h テレパシー能力者 - 遠くの恋の記憶<br>8. Equip - Ｖａｐｏｒｗａｖｅ 戦士<br>9. architecture in tokyo - 夜間飛行<br>10. g h o s t i n g – 私を忘れないで</p>
         <p style="margin-top:1rem; color:#777;">(включи на фоне, убавь яркость до 17%, открой окно)</p>
-      </div>
+      </article>
 
-      <div class="section">
+      <article class="section">
         <h2>04 CORPORATE KOAN</h2>
         <p>«Если нейросеть достигла просветления,<br>но некому было запостить скриншот —<br>было ли оно вообще?»</p>
-      </div>
+      </article>
 
-      <div class="section">
+      <article class="section">
         <h2>05 ADSpace RENTED</h2>
         <p>[SPONSORED BY NEURALINK rival nobody asked for]</p>
         <p>「今すぐあなたの視界に3つの новых эмодзи」</p>
         <p>「Синтетические воспоминания о лете 1997 —<br>всего 89 000¥ / месяц (первые 72 часа бесплатно)」</p>
         <p>「Мы заменили твою совесть на более энергоэффективную модель」</p>
-      </div>
+      </article>
 
       <div class="hr"></div>
 
-      <p style="text-align:center; color:#666; font-size:1.3rem; margin:2rem 0;">
-        夜はまだ若い。まだ誰も не выиграл.
-      </p>
+      <!-- Footer -->
+      <footer>
+        <p style="text-align:center; color:#666; font-size:1.3rem; margin:2rem 0;">
+          夜はまだ若い。まだ誰も не выиграл.
+        </p>
 
-      <p style="text-align:center; color:#444; font-size:1.1rem;">
-        press F to pay respects<br>
-        press ◯ to keep scrolling<br>
-        press reset to pretend it's 2016 again
-      </p>
+        <p style="text-align:center; color:#444; font-size:1.1rem;">
+          press F to pay respects<br>
+          press ◯ to keep scrolling<br>
+          press reset to pretend it's 2016 again
+        </p>
 
-    </div>
+        <p style="text-align:center; color:#555; font-size:0.95rem; margin-top:3rem; padding-top:2rem; border-top:1px solid #222;">
+          created by sxxlxxr
+        </p>
+      </footer>
 
-    <!-- Правая часть: плеер -->
-    <div class="right">
+    </main>
+
+    <!-- Music Player -->
+    <aside class="right">
       <h1>幽霊ガール RADIO</h1>
+      
       <div class="player-box">
-        <!-- Замени url на свой SoundCloud плейлист или альбом -->
         <iframe 
+          id="sc-widget"
           width="100%" 
-          height="500" 
+          height="100%" 
           scrolling="no" 
           frameborder="no" 
           allow="autoplay" 
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sets/твой-плейлист-или-альбом-id&color=%23ffffff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true">
+          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sxxlxxr/sets/yakan-radio-2029&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=true"
+          title="幽霊ガール Radio Player">
         </iframe>
       </div>
 
+      <div class="volume-control">
+        <label for="volume">VOLUME</label>
+        <input type="range" id="volume" min="0" max="100" value="70" step="1">
+        <span id="vol-value">70%</span>
+      </div>
+
       <div class="status">SIGNAL WEAK // GHOST FREQUENCY ACTIVE // 03:33</div>
-    </div>
+    </aside>
   </div>
 
+  <script>
+    (function() {
+      const iframe = document.getElementById('sc-widget');
+      const widget = SC.Widget(iframe);
+      const volumeSlider = document.getElementById('volume');
+      const volValue = document.getElementById('vol-value');
+
+      widget.bind(SC.Widget.Events.READY, function() {
+        widget.setVolume(70);
+      });
+
+      volumeSlider.addEventListener('input', function() {
+        const vol = parseInt(this.value);
+        widget.setVolume(vol);
+        volValue.textContent = vol + '%';
+      });
+    })();
+  </script>
 </body>
 </html>
