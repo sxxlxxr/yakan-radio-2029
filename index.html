@@ -382,7 +382,7 @@
 
       <div class="victim-section">
         <button class="victim-btn" id="heart-btn">стал жертвой онлайн жизни</button>
-        <div class="victim-counter" id="counter">жертв: 0</div>
+        <div class="victim-counter" id="counter">💔 жертв: 0</div>
       </div>
     </aside>
   </div>
@@ -425,7 +425,7 @@
             if (!r.ok) {
               // Если 404 — значит счётчик ещё не создан, показываем 0
               if (r.status === 404) {
-                display.textContent = 'жертв: 0';
+                display.textContent = '💔 жертв: 0';
                 return;
               }
               throw new Error('Ошибка загрузки');
@@ -435,12 +435,12 @@
           .then(data => {
             if (data) {
               const count = data.value || 0;
-              display.textContent = `жертв: ${count}`;
+              display.textContent = `💔 жертв: ${count}`;
             }
           })
           .catch(err => {
             console.error('Ошибка счётчика:', err);
-            display.textContent = 'жертв: ? (ошибка)';
+            display.textContent = '💔 жертв: ? (ошибка)';
           });
       }
 
@@ -476,13 +476,13 @@
             return r.json();
           })
           .then(data => {
-            display.textContent = `жертв: ${data.value}`;
+            display.textContent = `💔 жертв: ${data.value}`;
           })
           .catch(err => {
             console.error('Ошибка инкремента:', err);
             // Локально +1 на случай временной ошибки
-            const current = parseInt(display.textContent.replace('жертв: ', '')) || 0;
-            display.textContent = `жертв: ${current + 1} (оффлайн)`;
+            const current = parseInt(display.textContent.replace('💔 жертв: ', '')) || 0;
+            display.textContent = `💔 жертв: ${current + 1} (оффлайн)`;
           });
       });
     })();
