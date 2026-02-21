@@ -228,6 +228,34 @@
       text-transform: lowercase;
     }
 
+    .track-controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .track-btn {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: 1px solid #444;
+      color: #888;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .track-btn:hover {
+      border-color: #666;
+      color: #aaa;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .track-btn:active {
+      transform: scale(0.95);
+    }
+
     @keyframes floatAway {
       0% {
         opacity: 0.9;
@@ -372,6 +400,11 @@
         </iframe>
       </div>
 
+      <div class="track-controls">
+        <button class="track-btn" id="prevBtn">◀ PREV</button>
+        <button class="track-btn" id="nextBtn">NEXT ▶</button>
+      </div>
+
       <div class="volume-control">
         <label for="volume">VOLUME</label>
         <input type="range" id="volume" min="0" max="100" value="70" step="1">
@@ -402,6 +435,18 @@
         const vol = parseInt(this.value);
         widget.setVolume(vol);
         volValue.textContent = vol + '%';
+      });
+
+      // Track navigation controls
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      prevBtn.addEventListener('click', function() {
+        widget.prev();
+      });
+
+      nextBtn.addEventListener('click', function() {
+        widget.next();
       });
 
       // Victim button with Abacus API (fixed version)
