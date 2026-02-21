@@ -184,6 +184,84 @@
       color: #666;
     }
 
+    .victim-btn {
+      padding: 1rem 2rem;
+      background: transparent;
+      border: 1px solid #444;
+      color: #888;
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: lowercase;
+    }
+
+    .victim-btn:hover {
+      border-color: #666;
+      color: #aaa;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .victim-btn:active {
+      transform: scale(0.98);
+    }
+
+    .victim-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .victim-section {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hearts-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      max-width: 300px;
+      min-height: 40px;
+    }
+
+    .broken-heart {
+      font-size: 1.5rem;
+      animation: heartAppear 0.5s ease-out;
+      color: #666;
+    }
+
+    @keyframes heartAppear {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      50% {
+        transform: scale(1.2) rotate(10deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    .victim-counter {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: #666;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .victim-counter #counterValue {
+      color: #888;
+      font-weight: 500;
+    }
+
     /* === Responsive === */
     @media (max-width: 900px) {
       .container {
@@ -324,6 +402,12 @@
       </div>
 
       <div class="status">SIGNAL WEAK // GHOST FREQUENCY ACTIVE // 03:33</div>
+
+      <div class="victim-section">
+        <button class="victim-btn" id="victimBtn">стал жертвой онлайн жизни</button>
+        <div class="hearts-container" id="heartsContainer"></div>
+        <div class="victim-counter" id="victimCounter">жертв: <span id="counterValue">0</span></div>
+      </div>
     </aside>
   </div>
 
@@ -343,6 +427,66 @@
         widget.setVolume(vol);
         volValue.textContent = vol + '%';
       });
+
+      // Victim button functionality with Netlify Functions
+      const victimBtn = document.getElementById('victimBtn');
+      const heartsContainer = document.getElementById('heartsContainer');
+      const counterValue = document.getElementById('counterValue');
+      const STORAGE_KEY = 'yakan_victim_clicked';
+
+      // Check if user already clicked
+      const hasClicked = localStorage.getItem(STORAGE_KEY);
+
+      // Load current global count
+      fetch('/.netlify/functions/counter')
+        .then(r => r.text())
+        .then(num => {
+          counterValue.textContent = num;
+          // Display hearts based on count (limit to 50 for performance)
+          const heartsToShow = Math.min(parseInt(num), 50);
+          for (let i = 0; i < heartsToShow; i++) {
+            addHeart(false);
+          }
+        })
+        .catch(() => counterValue.textContent = '?');
+
+      // Disable button if already clicked
+      if (hasClicked) {
+        victimBtn.disabled = true;
+        victimBtn.textContent = 'уже жертва...';
+      }
+
+      victimBtn.addEventListener('click', function() {
+        if (!hasClicked) {
+          // Mark as clicked locally
+          localStorage.setItem(STORAGE_KEY, 'true');
+          
+          // Add animated heart
+          addHeart(true);
+          
+          // Increment global counter
+          fetch('/.netlify/functions/counter', { method: 'POST' })
+            .then(r => r.text())
+            .then(num => {
+              counterValue.textContent = num;
+            })
+            .catch(() => console.log('Failed to update counter'));
+          
+          // Disable button
+          victimBtn.disabled = true;
+          victimBtn.textContent = 'уже жертва...';
+        }
+      });
+
+      function addHeart(animate = true) {
+        const heart = document.createElement('span');
+        heart.className = 'broken-heart';
+        if (!animate) {
+          heart.style.animation = 'none';
+        }
+        heart.textContent = '💔';
+        heartsContainer.appendChild(heart);
+      }
     })();
   </script>
 </body>
