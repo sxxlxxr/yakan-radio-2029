@@ -404,10 +404,11 @@
         volValue.textContent = vol + '%';
       });
 
-      // Victim button with Abacus API
+      // Victim button with Abacus API (fixed version)
       const btn = document.getElementById('heart-btn');
       const display = document.getElementById('counter');
-      const namespace = 'yakan-heart-victim';
+      const namespace = 'yakan';
+      const key = 'heart-victim';
       const STORAGE_KEY = 'yakan_victim_clicked';
 
       // Check if user already clicked
@@ -417,14 +418,34 @@
         btn.textContent = 'уже жертва...';
       }
 
-      // Загрузка текущего счёта при открытии страницы
-      fetch(`https://abacus.jasoncameron.dev/${namespace}`)
-        .then(r => r.json())
-        .then(data => {
-          const count = data.value || 0;
-          display.textContent = `жертв: ${count}`;
-        })
-        .catch(() => display.textContent = 'жертв: ? (ошибка)');
+      // Функция для обновления счётчика на странице
+      function updateCounter() {
+        fetch(`https://abacus.jasoncameron.dev/get/${namespace}/${key}`)
+          .then(r => {
+            if (!r.ok) {
+              // Если 404 — значит счётчик ещё не создан, показываем 0
+              if (r.status === 404) {
+                display.textContent = 'жертв: 0';
+                return;
+              }
+              throw new Error('Ошибка загрузки');
+            }
+            return r.json();
+          })
+          .then(data => {
+            if (data) {
+              const count = data.value || 0;
+              display.textContent = `жертв: ${count}`;
+            }
+          })
+          .catch(err => {
+            console.error('Ошибка счётчика:', err);
+            display.textContent = 'жертв: ? (ошибка)';
+          });
+      }
+
+      // Загружаем счёт при открытии страницы
+      updateCounter();
 
       btn.addEventListener('click', () => {
         if (hasClicked) return;
@@ -434,7 +455,7 @@
         btn.disabled = true;
         btn.textContent = 'уже жертва...';
 
-        // Анимация разбитого сердца
+        // Анимация сердца
         const heart = document.createElement('div');
         heart.textContent = '💔';
         heart.style.position = 'fixed';
@@ -448,13 +469,21 @@
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 3000);
 
-        // Увеличиваем глобальный счёт
-        fetch(`https://abacus.jasoncameron.dev/${namespace}?action=increment`, { method: 'POST' })
-          .then(r => r.json())
+        // Увеличиваем счётчик
+        fetch(`https://abacus.jasoncameron.dev/hit/${namespace}/${key}`)
+          .then(r => {
+            if (!r.ok) throw new Error('Не удалось увеличить');
+            return r.json();
+          })
           .then(data => {
             display.textContent = `жертв: ${data.value}`;
           })
-          .catch(() => console.log('Не получилось увеличить'));
+          .catch(err => {
+            console.error('Ошибка инкремента:', err);
+            // Локально +1 на случай временной ошибки
+            const current = parseInt(display.textContent.replace('жертв: ', '')) || 0;
+            display.textContent = `жертв: ${current + 1} (оффлайн)`;
+          });
       });
     })();
   </script>
