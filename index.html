@@ -220,33 +220,12 @@
       gap: 1rem;
     }
 
-    .hearts-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      max-width: 300px;
-      min-height: 40px;
-    }
-
-    .broken-heart {
-      font-size: 1.5rem;
-      animation: heartAppear 0.5s ease-out;
+    .victim-counter {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
       color: #666;
-    }
-
-    @keyframes heartAppear {
-      0% {
-        opacity: 0;
-        transform: scale(0) rotate(0deg);
-      }
-      50% {
-        transform: scale(1.2) rotate(10deg);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-      }
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
     }
 
     @keyframes floatAway {
@@ -258,19 +237,6 @@
         opacity: 0;
         transform: translateY(-100px) scale(0.5) rotate(20deg);
       }
-    }
-
-    .victim-counter {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      color: #666;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .victim-counter #counterValue {
-      color: #888;
-      font-weight: 500;
     }
 
     /* === Responsive === */
@@ -415,9 +381,8 @@
       <div class="status">SIGNAL WEAK // GHOST FREQUENCY ACTIVE // 03:33</div>
 
       <div class="victim-section">
-        <button class="victim-btn" id="victimBtn">стал жертвой онлайн жизни</button>
-        <div class="hearts-container" id="heartsContainer"></div>
-        <div class="victim-counter">жертв: <span id="counterValue">0</span></div>
+        <button class="victim-btn" id="heart-btn">стал жертвой онлайн жизни</button>
+        <div class="victim-counter" id="counter">жертв: 0</div>
       </div>
     </aside>
   </div>
@@ -439,88 +404,58 @@
         volValue.textContent = vol + '%';
       });
 
-      // Victim button functionality with Abacus API
-      const victimBtn = document.getElementById('victimBtn');
-      const heartsContainer = document.getElementById('heartsContainer');
-      const counterValue = document.getElementById('counterValue');
+      // Victim button with Abacus API
+      const btn = document.getElementById('heart-btn');
+      const display = document.getElementById('counter');
+      const namespace = 'yakan-heart-victim';
       const STORAGE_KEY = 'yakan_victim_clicked';
-      const namespace = 'yakan-heart-victim-2029';
 
       // Check if user already clicked
       const hasClicked = localStorage.getItem(STORAGE_KEY);
+      if (hasClicked) {
+        btn.disabled = true;
+        btn.textContent = 'уже жертва...';
+      }
 
-      // Load current global count from Abacus
+      // Загрузка текущего счёта при открытии страницы
       fetch(`https://abacus.jasoncameron.dev/${namespace}`)
         .then(r => r.json())
         .then(data => {
           const count = data.value || 0;
-          counterValue.textContent = count;
-          
-          // Display hearts based on count (limit to 50 for performance)
-          const heartsToShow = Math.min(count, 50);
-          for (let i = 0; i < heartsToShow; i++) {
-            addHeart(false);
-          }
+          display.textContent = `жертв: ${count}`;
         })
-        .catch(() => {
-          counterValue.textContent = '?';
-        });
+        .catch(() => display.textContent = 'жертв: ? (ошибка)');
 
-      // Disable button if already clicked
-      if (hasClicked) {
-        victimBtn.disabled = true;
-        victimBtn.textContent = 'уже жертва...';
-      }
+      btn.addEventListener('click', () => {
+        if (hasClicked) return;
 
-      victimBtn.addEventListener('click', function() {
-        if (!hasClicked) {
-          // Mark as clicked locally
-          localStorage.setItem(STORAGE_KEY, 'true');
-          
-          // Add animated heart
-          addHeart(true);
-          
-          // Add floating heart animation
-          const floatingHeart = document.createElement('div');
-          floatingHeart.textContent = '💔';
-          floatingHeart.style.position = 'fixed';
-          floatingHeart.style.left = `${Math.random() * 80 + 10}vw`;
-          floatingHeart.style.top = `${Math.random() * 80 + 10}vh`;
-          floatingHeart.style.fontSize = '4rem';
-          floatingHeart.style.pointerEvents = 'none';
-          floatingHeart.style.zIndex = '9999';
-          floatingHeart.style.opacity = '0.9';
-          floatingHeart.style.animation = 'floatAway 3s ease-out forwards';
-          document.body.appendChild(floatingHeart);
-          setTimeout(() => floatingHeart.remove(), 3000);
-          
-          // Increment global counter via Abacus
-          fetch(`https://abacus.jasoncameron.dev/${namespace}?action=increment`, { 
-            method: 'POST' 
-          })
-            .then(r => r.json())
-            .then(data => {
-              counterValue.textContent = data.value;
-            })
-            .catch(() => {
-              console.log('Failed to update counter');
-            });
-          
-          // Disable button
-          victimBtn.disabled = true;
-          victimBtn.textContent = 'уже жертва...';
-        }
-      });
+        // Mark as clicked
+        localStorage.setItem(STORAGE_KEY, 'true');
+        btn.disabled = true;
+        btn.textContent = 'уже жертва...';
 
-      function addHeart(animate = true) {
-        const heart = document.createElement('span');
-        heart.className = 'broken-heart';
-        if (!animate) {
-          heart.style.animation = 'none';
-        }
+        // Анимация разбитого сердца
+        const heart = document.createElement('div');
         heart.textContent = '💔';
-        heartsContainer.appendChild(heart);
-      }
+        heart.style.position = 'fixed';
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.top = `${Math.random() * 100}vh`;
+        heart.style.fontSize = '4rem';
+        heart.style.pointerEvents = 'none';
+        heart.style.zIndex = '9999';
+        heart.style.opacity = '0.9';
+        heart.style.animation = 'floatAway 3s ease-out forwards';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+
+        // Увеличиваем глобальный счёт
+        fetch(`https://abacus.jasoncameron.dev/${namespace}?action=increment`, { method: 'POST' })
+          .then(r => r.json())
+          .then(data => {
+            display.textContent = `жертв: ${data.value}`;
+          })
+          .catch(() => console.log('Не получилось увеличить'));
+      });
     })();
   </script>
 </body>
