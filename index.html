@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>夜刊 YAKAN • 2029.ghost</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --text: #d0d0d0;
+      --dim: #808080;
+      --glow: rgba(220,220,220,0.08);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'VT323', monospace;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.45;
+      font-size: 1.1rem;
+    }
+
+    .crt-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: 
+        repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.45) 2px, rgba(0,0,0,0.45) 4px),
+        radial-gradient(circle at 50% 50%, transparent 40%, #000 85%);
+      opacity: 0.75;
+      mix-blend-mode: multiply;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+      opacity: 0.10;
+      animation: noise-move 20s linear infinite;
+    }
+
+    @keyframes noise-move { 0% { background-position: 0 0; } 100% { background-position: 200px 200px; } }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 10;
+    }
+
+    .left, .right {
+      flex: 1;
+      padding: 3rem 2rem;
+      overflow-y: auto;
+    }
+
+    .left {
+      background: rgba(10,10,10,0.92);
+      border-right: 1px solid #222;
+      max-width: 55%;
+    }
+
+    .right {
+      background: rgba(5,5,5,0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1, h2 {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #fff;
+      text-shadow: 0 0 8px var(--glow);
+      margin-bottom: 1.2rem;
+    }
+
+    .ascii-art {
+      font-family: monospace;
+      white-space: pre;
+      font-size: 0.9rem;
+      color: #555;
+      margin: 1.5rem 0;
+      line-height: 1.1;
+    }
+
+    .section {
+      margin-bottom: 3.5rem;
+    }
+
+    .hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #444, transparent);
+      margin: 2rem 0;
+    }
+
+    .player-box {
+      width: 100%;
+      max-width: 540px;
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: inset 0 0 30px #000, 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .status {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      color: #555;
+      text-align: center;
+      letter-spacing: 0.2em;
+    }
+
+    @media (max-width: 900px) {
+      .container { flex-direction: column; }
+      .left, .right { max-width: 100%; border: none; }
+      .left { padding-top: 2rem; }
+      .right { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="crt-overlay"></div>
+  <div class="noise"></div>
+
+  <div class="container">
+    <!-- Левая часть: журнал -->
+    <div class="left">
+
+      <div class="ascii-art">
+╔════════════════════════════════════════════╗
+║  夜刊 YAKAN vol.零号 - 2029.02.ghost       ║
+║  «Когда боги умерли, мы купили их домены»  ║
+╚════════════════════════════════════════════╝
+      </div>
+
+      <div class="ascii-art">
+    ⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀
+    ⠀⢀⣠⡶⠞⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠛⠳⣦⣀⠀
+   ⣠⡾⠋⠀⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠙⢷⣄
+  ⣾⠃⠀⠀⢀⣴⠞⠋⠉⠀⠀⠀⠉⠙⢷⣄⠀⠀⠀⠀⠀⠈⣷
+ ⣿⠀⠀⠀⣾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣷⠀⠀⠀⠀⠀⢸
+ ⣿⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⢸
+ ⣿⠀⠀⠀⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡿⠃⠀⠀⠀⠀⢸
+  ⣷⡀⠀⠀⠈⠻⣦⣀⣀⣀⣀⣀⣤⠞⠋⠀⠀⠀⠀⢀⣾
+   ⠙⢷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⠟
+      ⠉⠛⠶⣦⣤⣤⣤⣤⣤⣶⠞⠋
+      </div>
+
+      <div class="ascii-art">
+┌───────────────────── INDEX v0.8 ─────────────────────┐
+│ 01 EDITORIAL – Последний кто нажмёт like             │
+│ 02 STREET SAMURAI 2.0 – augmentations tier-list '29  │
+│ 03 幽霊ガール – плейлист на 03:33                    │
+│ 04 CORPORATE KOAN – дзен от отдела по этике данных   │
+│ 05 ADSpace RENTED – твой мозг уже в аренде           │
+└───────────────────────────────────────────────────────┘
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="section">
+        <h2>01 EDITORIAL</h2>
+        <p>Мы больше не ждём спасения.<br>Мы ждём апдейт.</p>
+        <p>Последний романтик умер в прямом эфире в 2027-м.<br>С тех пор остались только стримеры,<br>которые притворяются, что ещё чувствуют что-то<br>кроме дофаминового зуда и страха пропустить дроп.</p>
+        <p>Неокиберпанк — это когда ты понимаешь,<br>что дистопия уже не страшная.<br>Она просто слегка overpriced и с mandatory subscription.</p>
+      </div>
+
+      <div class="section">
+        <h2>03 幽霊ガール — midnight playlist</h2>
+        <p>1. death's dynamic shroud - CD PLAYER少女<br>2. luxury elite - 空虚な心<br>3. bl00dwave - 深夜のドライブ<br>4. Nmesh - 新しい日の始まり<br>5. George Clanton - Make It Forever<br>6. 2814 - 恢复<br>7. t e l e p a t h テレパシー能力者 - 遠くの恋の記憶<br>8. Equip - Ｖａｐｏｒｗａｖｅ 戦士<br>9. architecture in tokyo - 夜間飛行<br>10. g h o s t i n g – 私を忘れないで</p>
+        <p style="margin-top:1rem; color:#777;">(включи на фоне, убавь яркость до 17%, открой окно)</p>
+      </div>
+
+      <div class="section">
+        <h2>04 CORPORATE KOAN</h2>
+        <p>«Если нейросеть достигла просветления,<br>но некому было запостить скриншот —<br>было ли оно вообще?»</p>
+      </div>
+
+      <div class="section">
+        <h2>05 ADSpace RENTED</h2>
+        <p>[SPONSORED BY NEURALINK rival nobody asked for]</p>
+        <p>「今すぐあなたの視界に3つの новых эмодзи」</p>
+        <p>「Синтетические воспоминания о лете 1997 —<br>всего 89 000¥ / месяц (первые 72 часа бесплатно)」</p>
+        <p>「Мы заменили твою совесть на более энергоэффективную модель」</p>
+      </div>
+
+      <div class="hr"></div>
+
+      <p style="text-align:center; color:#666; font-size:1.3rem; margin:2rem 0;">
+        夜はまだ若い。まだ誰も не выиграл.
+      </p>
+
+      <p style="text-align:center; color:#444; font-size:1.1rem;">
+        press F to pay respects<br>
+        press ◯ to keep scrolling<br>
+        press reset to pretend it's 2016 again
+      </p>
+
+    </div>
+
+    <!-- Правая часть: плеер -->
+    <div class="right">
+      <h1>幽霊ガール RADIO</h1>
+      <div class="player-box">
+        <!-- Замени url на свой SoundCloud плейлист или альбом -->
+        <iframe 
+          width="100%" 
+          height="500" 
+          scrolling="no" 
+          frameborder="no" 
+          allow="autoplay" 
+          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sets/твой-плейлист-или-альбом-id&color=%23ffffff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true">
+        </iframe>
+      </div>
+
+      <div class="status">SIGNAL WEAK // GHOST FREQUENCY ACTIVE // 03:33</div>
+    </div>
+  </div>
+
+</body>
+</html>
