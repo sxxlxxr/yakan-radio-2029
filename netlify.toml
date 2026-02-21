@@ -1,8 +1,0 @@
-[build]
-  command = ""
-  publish = "."
-
-[[redirects]]
-  from = "/.netlify/functions/counter"
-  to = "/.netlify/functions/counter"
-  status = 200
