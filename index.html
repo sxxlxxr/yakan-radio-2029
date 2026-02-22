@@ -215,17 +215,44 @@
     .victim-section {
       margin-top: 2rem;
       display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 1rem;
     }
 
-    .victim-counter {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
+    .hearts-display {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .static-heart {
+      font-size: 1.5rem;
       color: #666;
-      letter-spacing: 0.1em;
-      text-transform: lowercase;
+      animation: heartPop 0.5s ease-out;
+    }
+
+    @keyframes heartPop {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1.3);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes floatAway {
+      0% {
+        opacity: 0.9;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.5) rotate(20deg);
+      }
     }
 
     .track-controls {
@@ -415,7 +442,7 @@
 
       <div class="victim-section">
         <button class="victim-btn" id="heart-btn">стал жертвой онлайн жизни</button>
-        <div class="victim-counter" id="counter">💔 жертв: 0</div>
+        <div class="hearts-display" id="heartsDisplay"></div>
       </div>
     </aside>
   </div>
@@ -449,9 +476,9 @@
         widget.next();
       });
 
-      // Victim button with Netlify Functions
+      // Victim button (client-side only)
       const btn = document.getElementById('heart-btn');
-      const display = document.getElementById('counter');
+      const heartsDisplay = document.getElementById('heartsDisplay');
       const STORAGE_KEY = 'yakan_victim_clicked';
 
       // Check if user already clicked
@@ -459,12 +486,12 @@
       if (hasClicked) {
         btn.disabled = true;
         btn.textContent = 'уже жертва...';
+        // Show heart if already clicked
+        const heart = document.createElement('span');
+        heart.textContent = '💔';
+        heart.className = 'static-heart';
+        heartsDisplay.appendChild(heart);
       }
-
-      // Загрузка
-      fetch('/api/counter')
-        .then(r => r.text())
-        .then(num => display.textContent = `💔 жертв: ${num}`);
 
       btn.addEventListener('click', () => {
         if (hasClicked) return;
@@ -474,24 +501,25 @@
         btn.disabled = true;
         btn.textContent = 'уже жертва...';
 
-        // Анимация сердца
-        const heart = document.createElement('div');
+        // Add heart next to button
+        const heart = document.createElement('span');
         heart.textContent = '💔';
-        heart.style.position = 'fixed';
-        heart.style.left = `${Math.random() * 100}vw`;
-        heart.style.top = `${Math.random() * 100}vh`;
-        heart.style.fontSize = '4rem';
-        heart.style.pointerEvents = 'none';
-        heart.style.zIndex = '9999';
-        heart.style.opacity = '0.9';
-        heart.style.animation = 'floatAway 3s ease-out forwards';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
+        heart.className = 'static-heart';
+        heartsDisplay.appendChild(heart);
 
-        // При клике
-        fetch('/api/counter', { method: 'POST' })
-          .then(r => r.text())
-          .then(num => display.textContent = `💔 жертв: ${num}`);
+        // Floating heart animation
+        const floatingHeart = document.createElement('div');
+        floatingHeart.textContent = '💔';
+        floatingHeart.style.position = 'fixed';
+        floatingHeart.style.left = `${Math.random() * 100}vw`;
+        floatingHeart.style.top = `${Math.random() * 100}vh`;
+        floatingHeart.style.fontSize = '4rem';
+        floatingHeart.style.pointerEvents = 'none';
+        floatingHeart.style.zIndex = '9999';
+        floatingHeart.style.opacity = '0.9';
+        floatingHeart.style.animation = 'floatAway 3s ease-out forwards';
+        document.body.appendChild(floatingHeart);
+        setTimeout(() => floatingHeart.remove(), 3000);
       });
     })();
   </script>
