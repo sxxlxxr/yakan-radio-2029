@@ -1,8 +1,8 @@
 {
-  "name": "yakan-2029",
+  "name": "yakan-radio-2029",
   "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "dependencies": {
-    "@netlify/blobs": "^7.0.0"
+    "@vercel/kv": "^2.0.0"
   }
 }
