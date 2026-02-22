@@ -1,18 +1,16 @@
-import { kv } from '@vercel/kv'; // встроенная KV база Vercel (бесплатно до 256 KB/ключ)
+import { kv } from '@vercel/kv';
 
 export const config = {
-  runtime: 'edge', // или 'nodejs' — edge быстрее и дешевле
+  runtime: 'nodejs',  // ← ключевой фикс: явно Node.js (или просто удали эту строку — Vercel сам выберет Node.js)
 };
 
 export default async function handler(req) {
-  // CORS для всех запросов
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
-  // Preflight OPTIONS
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
@@ -37,8 +35,5 @@ export default async function handler(req) {
     });
   }
 
-  return new Response('Method Not Allowed', {
-    status: 405,
-    headers: corsHeaders,
-  });
+  return new Response('Method Not Allowed', { status: 405, headers: corsHeaders });
 }
