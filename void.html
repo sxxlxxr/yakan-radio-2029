@@ -4,27 +4,55 @@
 <meta charset="UTF-8">
 <title>03:33</title>
 <style>
-body {
+html, body {
   margin:0;
+  padding:0;
   background:black;
-  color:#00ff99;
-  font-family:monospace;
+  overflow:hidden;
+  height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  height:100vh;
+  flex-direction:column;
+  font-family:monospace;
+}
+
+.blackhole {
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  background:radial-gradient(circle at center, #000 40%, #0f0 45%, #000 60%);
+  animation:spin 4s linear infinite, pulse 3s ease-in-out infinite;
+  box-shadow:0 0 40px #00ff99;
+}
+
+@keyframes spin {
+  from { transform:rotate(0deg); }
+  to { transform:rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow:0 0 20px #00ff99; }
+  50% { box-shadow:0 0 80px #00ff99; }
+}
+
+.text {
+  margin-top:40px;
+  color:#00ff99;
+  letter-spacing:6px;
+  opacity:0;
+  animation:fadein 2s ease forwards 3s;
+}
+
+@keyframes fadein {
+  to { opacity:1; }
 }
 </style>
 </head>
 <body>
-<script>
-setTimeout(() => {
-  document.body.innerHTML = "connection lost";
-}, 3000);
 
-setTimeout(() => {
-  window.location.href = "about:blank";
-}, 6000);
-</script>
+<div class="blackhole"></div>
+<div class="text">CONNECT LOSS</div>
+
 </body>
 </html>
