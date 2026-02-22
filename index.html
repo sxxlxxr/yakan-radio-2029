@@ -449,11 +449,9 @@
         widget.next();
       });
 
-      // Victim button with Abacus API (fixed version)
+      // Victim button with Netlify Functions
       const btn = document.getElementById('heart-btn');
       const display = document.getElementById('counter');
-      const namespace = 'yakan';
-      const key = 'heart-victim';
       const STORAGE_KEY = 'yakan_victim_clicked';
 
       // Check if user already clicked
@@ -465,23 +463,10 @@
 
       // Функция для обновления счётчика на странице
       function updateCounter() {
-        fetch(`https://abacus.jasoncameron.dev/get/${namespace}/${key}`)
-          .then(r => {
-            if (!r.ok) {
-              // Если 404 — значит счётчик ещё не создан, показываем 0
-              if (r.status === 404) {
-                display.textContent = '💔 жертв: 0';
-                return;
-              }
-              throw new Error('Ошибка загрузки');
-            }
-            return r.json();
-          })
-          .then(data => {
-            if (data) {
-              const count = data.value || 0;
-              display.textContent = `💔 жертв: ${count}`;
-            }
+        fetch('/api/counter')
+          .then(r => r.text())
+          .then(num => {
+            display.textContent = `💔 жертв: ${num}`;
           })
           .catch(err => {
             console.error('Ошибка счётчика:', err);
@@ -515,19 +500,13 @@
         setTimeout(() => heart.remove(), 3000);
 
         // Увеличиваем счётчик
-        fetch(`https://abacus.jasoncameron.dev/hit/${namespace}/${key}`)
-          .then(r => {
-            if (!r.ok) throw new Error('Не удалось увеличить');
-            return r.json();
-          })
-          .then(data => {
-            display.textContent = `💔 жертв: ${data.value}`;
+        fetch('/api/counter', { method: 'POST' })
+          .then(r => r.text())
+          .then(num => {
+            display.textContent = `💔 жертв: ${num}`;
           })
           .catch(err => {
             console.error('Ошибка инкремента:', err);
-            // Локально +1 на случай временной ошибки
-            const current = parseInt(display.textContent.replace('💔 жертв: ', '')) || 0;
-            display.textContent = `💔 жертв: ${current + 1} (оффлайн)`;
           });
       });
     })();
