@@ -1,52 +1,38 @@
-import { getStore } from "@netlify/blobs";
+import { kv } from '@vercel/kv'; // для хранения (альтернатива Blobs)
 
-export default async (req) => {
-  const store = getStore("victims-counter");
+export const config = { runtime: 'edge' }; // или 'nodejs' для простоты
 
-  if (req.method === "GET") {
-    try {
-      const value = await store.get("count", { type: "text" });
-      return new Response(value || "0", {
-        status: 200,
-        headers: { 
-          "Content-Type": "text/plain",
-          "Access-Control-Allow-Origin": "*"
-        }
-      });
-    } catch (e) {
-      console.error(e);
-      return new Response("0", { 
-        status: 200,
-        headers: { 
-          "Content-Type": "text/plain",
-          "Access-Control-Allow-Origin": "*"
-        }
-      });
-    }
-  }
-
-  if (req.method === "POST") {
-    let count = 0;
-    try {
-      const value = await store.get("count", { type: "text" });
-      count = parseInt(value || "0", 10);
-    } catch (e) {
-      console.error(e);
-    }
-
-    count += 1;
-    await store.set("count", count.toString());
-
-    return new Response(count.toString(), {
-      status: 200,
-      headers: { 
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      }
+export default async function handler(req) {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
     });
   }
 
-  return new Response("Method Not Allowed", { status: 405 });
-};
+  const countKey = 'victims-count';
 
-export const config = { path: "/api/counter" };
+  if (req.method === 'GET') {
+    const count = await kv.get(countKey) || 0;
+    return new Response(count.toString(), {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*' },
+    });
+  }
+
+  if (req.method === 'POST') {
+    let count = await kv.get(countKey) || 0;
+    count += 1;
+    await kv.set(countKey, count);
+    return new Response(count.toString(), {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*' },
+    });
+  }
+
+  return new Response('Method Not Allowed', { status: 405 });
+}
