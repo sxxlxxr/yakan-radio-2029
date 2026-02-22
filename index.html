@@ -461,21 +461,10 @@
         btn.textContent = 'уже жертва...';
       }
 
-      // Функция для обновления счётчика на странице
-      function updateCounter() {
-        fetch('/api/counter')
-          .then(r => r.text())
-          .then(num => {
-            display.textContent = `💔 жертв: ${num}`;
-          })
-          .catch(err => {
-            console.error('Ошибка счётчика:', err);
-            display.textContent = '💔 жертв: ? (ошибка)';
-          });
-      }
-
-      // Загружаем счёт при открытии страницы
-      updateCounter();
+      // Загрузка
+      fetch('/api/counter')
+        .then(r => r.text())
+        .then(num => display.textContent = `💔 жертв: ${num}`);
 
       btn.addEventListener('click', () => {
         if (hasClicked) return;
@@ -499,15 +488,10 @@
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 3000);
 
-        // Увеличиваем счётчик
+        // При клике
         fetch('/api/counter', { method: 'POST' })
           .then(r => r.text())
-          .then(num => {
-            display.textContent = `💔 жертв: ${num}`;
-          })
-          .catch(err => {
-            console.error('Ошибка инкремента:', err);
-          });
+          .then(num => display.textContent = `💔 жертв: ${num}`);
       });
     })();
   </script>
