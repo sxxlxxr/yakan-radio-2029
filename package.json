@@ -1,0 +1,8 @@
+{
+  "name": "yakan-2029",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^7.0.0"
+  }
+}
