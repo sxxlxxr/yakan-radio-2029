@@ -7,23 +7,46 @@
 html, body {
   margin:0;
   padding:0;
-  background:black;
+  background:#000;
+  color:#fff;
   overflow:hidden;
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-family: "Courier New", monospace;
+}
+
+.container {
+  position:relative;
+  width:320px;
+  height:320px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   flex-direction:column;
-  font-family:monospace;
 }
 
 .blackhole {
+  position:absolute;
   width:200px;
   height:200px;
   border-radius:50%;
-  background:radial-gradient(circle at center, #000 40%, #0f0 45%, #000 60%);
-  animation:spin 4s linear infinite, pulse 3s ease-in-out infinite;
-  box-shadow:0 0 40px #00ff99;
+  background:radial-gradient(circle at center,
+    #000 40%,
+    #111 55%,
+    #222 65%,
+    #000 75%);
+  animation:spin 40s linear infinite;
+}
+
+.ring {
+  position:absolute;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.2);
+  animation:spinReverse 80s linear infinite;
 }
 
 @keyframes spin {
@@ -31,28 +54,67 @@ html, body {
   to { transform:rotate(360deg); }
 }
 
-@keyframes pulse {
-  0%,100% { box-shadow:0 0 20px #00ff99; }
-  50% { box-shadow:0 0 80px #00ff99; }
+@keyframes spinReverse {
+  from { transform:rotate(360deg); }
+  to { transform:rotate(0deg); }
 }
 
 .text {
-  margin-top:40px;
-  color:#00ff99;
+  position:absolute;
+  bottom:-60px;
   letter-spacing:6px;
   opacity:0;
-  animation:fadein 2s ease forwards 3s;
+  transition:opacity 1s ease;
 }
 
-@keyframes fadein {
-  to { opacity:1; }
+.scanline {
+  position:absolute;
+  width:100%;
+  height:2px;
+  background:rgba(255,255,255,0.05);
+  animation:scan 5s linear infinite;
+}
+
+@keyframes scan {
+  0% { top:0; }
+  100% { top:100%; }
 }
 </style>
 </head>
 <body>
 
-<div class="blackhole"></div>
-<div class="text">CONNECT LOSS</div>
+<div class="container">
+  <div class="blackhole"></div>
+  <div class="ring"></div>
+  <div class="scanline"></div>
+  <div class="text" id="msg">CONNECT LOSS</div>
+</div>
+
+<script>
+function beep() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "square";
+  osc.frequency.value = 880; // старый ПК-писк
+  gain.gain.value = 0.05;
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  setTimeout(() => {
+    osc.stop();
+    ctx.close();
+  }, 120);
+}
+
+setTimeout(() => {
+  document.getElementById("msg").style.opacity = "1";
+  beep();
+}, 3000);
+</script>
 
 </body>
 </html>
