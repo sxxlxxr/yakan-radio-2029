@@ -173,6 +173,16 @@
       border-radius: 4px;
       overflow: hidden;
       box-shadow: 0 0 25px rgba(100,100,100,0.3), 0 0 50px rgba(150,150,150,0.15);
+      position: relative;
+    }
+
+    .player-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+      z-index: 1;
     }
 
     .status {
@@ -814,11 +824,11 @@
         <iframe 
           id="sc-widget"
           width="100%" 
-          height="600" 
-          scrolling="no" 
+          height="450" 
+          scrolling="yes" 
           frameborder="no" 
           allow="autoplay" 
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sxxlxxr/sets/yakan-radio-2029&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
+          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sxxlxxr/sets/yakan-radio-2029&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
           title="幽霊ガール Radio Player">
         </iframe>
       </div>
