@@ -111,6 +111,48 @@
       margin: 1.5rem 0;
     }
 
+    .qr-container {
+      display: inline-flex;
+      justify-content: center;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid #333;
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .qr-container::before {
+      content: '[ SCAN TO CONNECT ]';
+      position: absolute;
+      top: 0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
+
+    .qr-code {
+      width: 150px;
+      height: 150px;
+      filter: brightness(0.3) contrast(1.2);
+      image-rendering: pixelated;
+      border: 2px solid #444;
+      padding: 0.75rem;
+      background: #000;
+      box-shadow: 0 0 5px rgba(100,100,100,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .qr-container:hover .qr-code {
+      filter: brightness(0.85) contrast(1.2) invert(1);
+      box-shadow: 0 0 15px rgba(100,100,100,0.2);
+    }
+
     /* === Components === */
     .section {
       margin-bottom: 3.5rem;
@@ -361,17 +403,28 @@
 ╚════════════════════════════════════════════╝
         </div>
 
-        <div class="ascii-art">
-    ⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀
-    ⠀⢀⣠⡶⠞⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠛⠳⣦⣀⠀
-   ⣠⡾⠋⠀⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠙⢷⣄
-  ⣾⠃⠀⠀⢀⣴⠞⠋⠉⠀⠀⠀⠉⠙⢷⣄⠀⠀⠀⠀⠀⠈⣷
- ⣿⠀⠀⠀⣾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣷⠀⠀⠀⠀⠀⢸
- ⣿⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⢸
- ⣿⠀⠀⠀⠘⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡿⠃⠀⠀⠀⠀⢸
-  ⣷⡀⠀⠀⠈⠻⣦⣀⣀⣀⣀⣀⣤⠞⠋⠀⠀⠀⠀⢀⣾
-   ⠙⢷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⠟
-      ⠉⠛⠶⣦⣤⣤⣤⣤⣤⣶⠞⠋
+        <div style="display: flex; gap: 2rem; align-items: flex-start;">
+          <div>
+            <div class="qr-container">
+              <img src="qr.png" alt="QR Code" class="qr-code">
+            </div>
+          </div>
+
+          <div class="ascii-art" style="margin: 0; font-size: 0.7rem; line-height: 1; color: #444;">
+    ░░▒▒▓▓██▓▓▒▒░░
+  ░▒▓█████████▓▒░
+ ▒▓███████████▓▒
+░▓█████░░░█████▓░
+▒████░░   ░░████▒
+▓███░       ░███▓
+▓███         ███▓
+▓███░       ░███▓
+▒████░░   ░░████▒
+░▓█████░░░█████▓░
+ ▒▓███████████▓▒
+  ░▒▓█████████▓▒░
+    ░░▒▒▓▓██▓▓▒▒░░
+          </div>
         </div>
 
         <nav class="ascii-art">
@@ -381,6 +434,8 @@
 │ 03 幽霊ガール – плейлист на 03:33                    │
 │ 04 CORPORATE KOAN – дзен от отдела по этике данных   │
 │ 05 ADSpace RENTED – твой мозг уже в аренде           │
+│ 06 ERROR 404: FAITH NOT FOUND – вера удалена         │
+│ 07 FOOTNOTE – самоуничтожение по расписанию          │
 └───────────────────────────────────────────────────────┘
         </nav>
       </header>
@@ -393,6 +448,30 @@
         <p>Мы больше не ждём спасения.<br>Мы ждём апдейт.</p>
         <p>Последний романтик умер в прямом эфире в 2027-м.<br>С тех пор остались только стримеры,<br>которые притворяются, что ещё чувствуют что-то<br>кроме дофаминового зуда и страха пропустить дроп.</p>
         <p>Неокиберпанк — это когда ты понимаешь,<br>что дистопия уже не страшная.<br>Она просто слегка overpriced и с mandatory subscription.</p>
+      </article>
+
+      <article class="section">
+        <h2>02 STREET SAMURAI 2.0 — augmentations tier-list '29</h2>
+        
+        <p style="color:#00ff00; margin-bottom:0.5rem;">S-tier</p>
+        <p>— OpticGhost v3: авто-цензура реальности (убирает нищету, добавляет bloom)<br>
+        — SpineLink Black: +30% к выносливости, −15% к эмпатии<br>
+        — AdBlock Cortex: фильтрует рекламные мысли (патч нестабилен)</p>
+
+        <p style="color:#66ff66; margin-top:1.5rem; margin-bottom:0.5rem;">A-tier</p>
+        <p>— SkinWeave Chrome: эстетика > функциональность<br>
+        — PulseSync+: сердцебиение под BPM любимого трека<br>
+        — MemoryCache 256GB: можно хранить бывших в архиве</p>
+
+        <p style="color:#ffff00; margin-top:1.5rem; margin-bottom:0.5rem;">B-tier</p>
+        <p>— MoodPatch Lite: имитация «мне нормально»<br>
+        — VoiceMod Silk: голос как у героя трейлера, смысл — прежний<br>
+        — DreamRecorder: записывает кошмары в 4K</p>
+
+        <p style="color:#ff6600; margin-top:1.5rem; margin-bottom:0.5rem;">C-tier</p>
+        <p>— SoulNFT: уникальность подтверждена блокчейном<br>
+        — RetroPain™: боль как в 2005-м, без микротранзакций<br>
+        — SocialAura Beta: кажется, что ты кому-то нужен</p>
       </article>
 
       <article class="section">
@@ -412,6 +491,20 @@
         <p>「今すぐあなたの視界に3つの новых эмодзи」</p>
         <p>「Синтетические воспоминания о лете 1997 —<br>всего 89 000¥ / месяц (первые 72 часа бесплатно)」</p>
         <p>「Мы заменили твою совесть на более энергоэффективную модель」</p>
+        <p style="margin-top:1rem;">「Ваши мысли устарели. Обновите прошивку личности до версии 4.1」</p>
+        <p>「Теперь с рекламой внутри сна (пропуск через осознанность недоступен)」</p>
+        <p>「Покупая бессмертие, вы соглашаетесь на обработку вечности」</p>
+      </article>
+
+      <article class="section">
+        <h2>06 ERROR 404: FAITH NOT FOUND</h2>
+        <p>Вера была удалена за нарушение правил сообщества.<br>Причина: «слишком искренне».</p>
+        <p>Попробуйте снова через 24 часа. Или оформите премиум.</p>
+      </article>
+
+      <article class="section">
+        <h2>07 FOOTNOTE</h2>
+        <p>Этот номер самоуничтожится, когда ты перестанешь чувствовать ностальгию по будущему.</p>
       </article>
 
       <div class="hr"></div>
