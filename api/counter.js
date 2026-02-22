@@ -1,7 +1,12 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 export const config = {
-  runtime: 'nodejs',  // ← ключевой фикс: явно Node.js (или просто удали эту строку — Vercel сам выберет Node.js)
+  runtime: 'nodejs', // явно Node.js
 };
 
 export default async function handler(req) {
@@ -18,7 +23,7 @@ export default async function handler(req) {
   const countKey = 'victims-count';
 
   if (req.method === 'GET') {
-    const count = await kv.get(countKey) || 0;
+    const count = (await redis.get(countKey)) || 0;
     return new Response(count.toString(), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'text/plain' },
@@ -26,9 +31,9 @@ export default async function handler(req) {
   }
 
   if (req.method === 'POST') {
-    let count = await kv.get(countKey) || 0;
+    let count = (await redis.get(countKey)) || 0;
     count += 1;
-    await kv.set(countKey, count);
+    await redis.set(countKey, count);
     return new Response(count.toString(), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'text/plain' },
