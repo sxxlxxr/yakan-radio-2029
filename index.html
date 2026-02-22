@@ -444,6 +444,93 @@
       100% { transform: translate(0, 0); }
     }
 
+    /* Terminal typing effect */
+    .terminal-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOut 0.5s ease-out 3s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    .terminal-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.2rem;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      max-width: 600px;
+      padding: 2rem;
+    }
+
+    .terminal-text::after {
+      content: '▮';
+      animation: blink-cursor 0.7s infinite;
+    }
+
+    @keyframes blink-cursor {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Waterfall effect */
+    .container {
+      opacity: 0;
+      animation: containerFadeIn 0.5s ease-out 3.5s forwards;
+    }
+
+    @keyframes containerFadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .left > * {
+      opacity: 0;
+      transform: translateY(-30px);
+      animation: cascadeIn 0.6s ease-out forwards;
+    }
+
+    .left > *:nth-child(1) { animation-delay: 3.6s; }
+    .left > *:nth-child(2) { animation-delay: 3.7s; }
+    .left > *:nth-child(3) { animation-delay: 3.8s; }
+    .left > *:nth-child(4) { animation-delay: 3.9s; }
+    .left > *:nth-child(5) { animation-delay: 4.0s; }
+    .left > *:nth-child(6) { animation-delay: 4.1s; }
+    .left > *:nth-child(7) { animation-delay: 4.2s; }
+    .left > *:nth-child(8) { animation-delay: 4.3s; }
+    .left > *:nth-child(9) { animation-delay: 4.4s; }
+    .left > *:nth-child(10) { animation-delay: 4.5s; }
+
+    @keyframes cascadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .right > * {
+      opacity: 0;
+      transform: translateY(-30px);
+      animation: cascadeIn 0.6s ease-out forwards;
+    }
+
+    .right > *:nth-child(1) { animation-delay: 3.7s; }
+    .right > *:nth-child(2) { animation-delay: 3.9s; }
+    .right > *:nth-child(3) { animation-delay: 4.1s; }
+    .right > *:nth-child(4) { animation-delay: 4.3s; }
+    .right > *:nth-child(5) { animation-delay: 4.5s; }
+    .right > *:nth-child(6) { animation-delay: 4.7s; }
+
     /* === Responsive === */
     @media (max-width: 900px) {
       .container {
@@ -469,6 +556,11 @@
   </style>
 </head>
 <body>
+  <!-- Terminal loading overlay -->
+  <div class="terminal-overlay" id="terminalOverlay">
+    <div class="terminal-text" id="terminalText"></div>
+  </div>
+
   <!-- Visual Effects -->
   <div class="crt-overlay"></div>
   <div class="noise"></div>
@@ -630,6 +722,41 @@
 
   <script>
     (function() {
+      // Terminal typing effect on load
+      const terminalText = document.getElementById('terminalText');
+      const terminalOverlay = document.getElementById('terminalOverlay');
+      const messages = [
+        '> Initializing YAKAN system...',
+        '> Loading neural interface...',
+        '> Connecting to ghost frequency...',
+        '> Welcome to 2029.ghost'
+      ];
+      
+      let messageIndex = 0;
+      let charIndex = 0;
+      
+      function typeMessage() {
+        if (messageIndex < messages.length) {
+          if (charIndex < messages[messageIndex].length) {
+            terminalText.textContent += messages[messageIndex][charIndex];
+            charIndex++;
+            setTimeout(typeMessage, 50);
+          } else {
+            terminalText.textContent += '\n';
+            messageIndex++;
+            charIndex = 0;
+            setTimeout(typeMessage, 300);
+          }
+        } else {
+          setTimeout(() => {
+            terminalOverlay.style.display = 'none';
+          }, 3500);
+        }
+      }
+      
+      typeMessage();
+
+      // SoundCloud player controls
       const iframe = document.getElementById('sc-widget');
       const widget = SC.Widget(iframe);
       const volumeSlider = document.getElementById('volume');
